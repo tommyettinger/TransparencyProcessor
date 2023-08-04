@@ -74,16 +74,17 @@ public class TransparencyProcessor extends ApplicationAdapter {
 
     @Override
     public void create() {
-        if(parameters == null) {
-            FileHandle[] files = {Gdx.files.local("knownFonts/" + "LanaPixel-standard.png")};
-//            FileHandle[] files = Gdx.files.local("knownFonts").list((dir, name) -> name.endsWith(".png") && !name.endsWith("-msdf.png"));
-            for (FileHandle file : files)
-                rewrite(file);
-        }
-        else {
+        if(parameters != null) {
             for (int i = 0; i < parameters.size(); i++) {
                 String name = parameters.get(i);
-                rewrite(Gdx.files.local(name));
+                FileHandle fh = Gdx.files.local(name);
+                if (fh.exists())
+                    rewrite(fh);
+                else {
+                    fh = Gdx.files.absolute(name);
+                    if (fh.exists())
+                        rewrite(fh);
+                }
             }
         }
         Gdx.app.exit();
