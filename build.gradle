@@ -25,11 +25,10 @@ configure(subprojects) {
 }
 
 subprojects {
-	version = '0.0.1'
+	version = '0.0.2-SNAPSHOT'
 	ext.appName = 'TransparencyProcessor'
 	repositories {
 		mavenCentral()
-		gradlePluginPortal()
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 		maven { url 'https://jitpack.io' }
 	}

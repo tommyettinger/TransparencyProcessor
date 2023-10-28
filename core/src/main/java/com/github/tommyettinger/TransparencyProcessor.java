@@ -60,7 +60,9 @@ public class TransparencyProcessor extends ApplicationAdapter {
     private int lastLineLen;
     private final List<String> parameters;
 
-    public TransparencyProcessor(List<String> args) {
+    private boolean gray = false;
+
+    public TransparencyProcessor(List<String> args, boolean gray) {
         buffer = new ChunkBuffer(65536);
         deflater = new Deflater(9);
         if(args == null || args.isEmpty()){
@@ -70,6 +72,7 @@ public class TransparencyProcessor extends ApplicationAdapter {
             return;
         }
         parameters = args;
+        this.gray = gray;
     }
 
     @Override
@@ -114,20 +117,30 @@ public class TransparencyProcessor extends ApplicationAdapter {
                 buffer.endChunk(dataOutput);
 
                 buffer.writeInt(PLTE);
-                for (int i = 0; i < 256; i++) {
-                    buffer.write(255);
-                    buffer.write(255);
-                    buffer.write(255);
+                if(gray){
+                    for (int i = 0; i < 256; i++) {
+                        buffer.write(i);
+                        buffer.write(i);
+                        buffer.write(i);
+                    }
+                } else {
+                    for (int i = 0; i < 256; i++) {
+                        buffer.write(255);
+                        buffer.write(255);
+                        buffer.write(255);
+                    }
                 }
                 buffer.endChunk(dataOutput);
 
-                buffer.writeInt(TRNS);
+                if(!gray) {
+                    buffer.writeInt(TRNS);
 
-                for (int i = 0; i < 256; i++) {
-                    buffer.write(i);
+                    for (int i = 0; i < 256; i++) {
+                        buffer.write(i);
+                    }
+
+                    buffer.endChunk(dataOutput);
                 }
-
-                buffer.endChunk(dataOutput);
                 buffer.writeInt(IDAT);
                 deflater.reset();
 
@@ -153,7 +166,7 @@ public class TransparencyProcessor extends ApplicationAdapter {
                     for (int x = 0; x < w; x++) {
                         color = pixmap.getPixel(x, y);
                         // this block may need to be commented out if a font uses non-white grayscale colors.
-                        if(!hasWarned && ((color & 255) != 0 && (color & 0xFFFFFF00) != 0xFFFFFF00)) {
+                        if(!gray && !hasWarned && ((color & 255) != 0 && (color & 0xFFFFFF00) != 0xFFFFFF00)) {
                             System.out.println("PROBLEM WITH " + file);
                             System.out.printf("Problem color: 0x%08X\n", color);
                             System.out.println("Position: " + x + "," + y);
