@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-@CommandLine.Command(name = "TransparencyProcessor", version = "TransparencyProcessor 0.0.2-SNAPSHOT",
+@CommandLine.Command(name = "TransparencyProcessor", version = "TransparencyProcessor 0.0.2",
 		description = "Given one or more PNG files that only use one visible RGB color but use a different RGB value for fully transparent, this makes the transparent color match the rest.",
 		mixinStandardHelpOptions = true)
 public class HeadlessLauncher implements Callable<Integer> {

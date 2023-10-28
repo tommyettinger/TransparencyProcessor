@@ -2,11 +2,19 @@
 A drag-and-drop or command-line tool that removes all but one RGB color and only leaves alpha in PNG inputs.
 
 # Usage
-This only works on PNGs with one visible color (often white), but a different RGB value for fully-transparent pixels
-often (0, 0, 0), which would be black if it weren't completely transparent. This tool will change the fully-transparent
-color to the visible color, such as to white, which can drastically improve how some linear-filtered images look,
-and also makes the image "indexed mode" instead of the likely "luminance alpha mode" that it may have had before.
-"Luminance alpha mode" isn't supported by OpenGL 3.0 and higher, so that's another reason to use indexed PNGs.
+There are two modes here: a default mode, which emits white images with varying alpha, and the `-g` mode, which emits
+grayscale images with no alpha. Both formats use indexed color, which is well-supported by both older and more-recent
+OpenGL and OpenGL ES. This is the main reason to use the `-g` mode, since it can convert grayscale PNGs to indexed color
+and so make those images usable by recent OpenGL (ES).
+
+The default mode only works on PNGs with one visible color (which should be white), but a different RGB value for
+fully-transparent pixels; often this is (0, 0, 0), which would be black if it weren't completely transparent. This tool
+will change the fully-transparent
+color to the visible color, such as to white, which can drastically improve how some linear-filtered images look.
+
+The `-g` mode is typically used on PNGs that use either luminance (grayscale) or alpha only, and converts them to use
+indexed mode with a grayscale palette. The only purpose for this is compatibility; the files are a tiny bit larger
+(unless you compress the files very carefully, such as by specifying `--ng` when using oxipng).
 
 There's a .zip in the Releases tab for x64 Windows users; it is fully self-contained and doesn't need Java installed.
 If that works for you (that is, if you're on 64-bit Windows, which is nearly all Windows users), then you can extract
