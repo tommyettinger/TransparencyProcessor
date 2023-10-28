@@ -172,7 +172,7 @@ public class TransparencyProcessor extends ApplicationAdapter {
                             System.out.println("Position: " + x + "," + y);
                             hasWarned = true;
                         }
-                        curLine[x] = (byte) (color & 255);
+                        curLine[x] = (byte) (color & color >>> 24 & 255);
                     }
 
                     deflaterOutput.write(FILTER_NONE);
